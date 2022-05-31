@@ -9,3 +9,5 @@ typechain-types
 cache
 artifacts
 
+deployed-bscTestnet.json
+deployed-rinkeby.json

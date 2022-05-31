@@ -8,7 +8,7 @@ async function main() {
   await Erc20myInstance.deployed();
 
   const MyBridge = await ethers.getContractFactory("MyBridge");
-  const MyBridgeInstance = await MyBridge.deploy(Erc20myInstance.address, '0x0000000000000000000000000000000000000000');
+  const MyBridgeInstance = await MyBridge.deploy();
 
   await Erc20myInstance.deployed();
   await Erc20myInstance.setMinter(MyBridgeInstance.address);
@@ -32,7 +32,6 @@ async function main() {
     await run("verify:verify", {
       address: MyBridgeInstance.address,
       constructorArguments: [
-        Erc20myInstance.address
       ],
     });
   }

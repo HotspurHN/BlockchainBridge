@@ -4,6 +4,7 @@ import "@nomiclabs/hardhat-ethers";
 import { Contract } from "@ethersproject/contracts";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import fs from "fs";
+import {MyBridge} from "../typechain-types/contracts/MyBridge";
 
 export function tasks() {
 
@@ -32,19 +33,22 @@ export function tasks() {
     task("swap", "Swap tokens")
         .addParam("amount", "integer")
         .addParam("nonce", "integer")
-        .setAction(async ({ amount, nonce }, hre) => {
+        .addParam("token", "string")
+        .setAction(async ({ amount, nonce, token }, hre) => {
             const instance = await initBlockchainBridgeTask(hre, BridgeContracts[hre.network.name]);
-            var tx = await instance.swap(amount, nonce);
+            var tx = await instance.swap(amount, nonce, token);
             console.log(await getSignatureFromEvent(hre, await tx.wait()));
         });
 
     task("redeem", "Redeem tokens")
         .addParam("amount", "integer")
         .addParam("nonce", "integer")
+        .addParam("chainid", "integer")
+        .addParam("token", "string")
         .addParam("signature", "string")
-        .setAction(async ({ amount, nonce, signature }, hre) => {
+        .setAction(async ({ amount, nonce, chainid, token, signature }, hre) => {
             const instance = await initBlockchainBridgeTask(hre, BridgeContracts[hre.network.name]);
-            await instance.redeem(amount, nonce, signature);
+            await instance.redeem(amount, nonce, chainid, token, signature);
         });
 
     task("nonce", "Get next nonce")
