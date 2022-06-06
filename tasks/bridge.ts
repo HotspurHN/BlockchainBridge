@@ -48,7 +48,8 @@ export function tasks() {
         .addParam("signature", "string")
         .setAction(async ({ amount, nonce, chainid, token, signature }, hre) => {
             const instance = await initBlockchainBridgeTask(hre, BridgeContracts[hre.network.name]);
-            await instance.redeem(amount, nonce, chainid, token, signature);
+            const sign = await (await hre.ethers.getSigners())[0].signMessage(hre.ethers.utils.arrayify('0x'+signature));
+            await instance.redeem(amount, nonce, chainid, token, sign);
         });
 
     task("nonce", "Get next nonce")
